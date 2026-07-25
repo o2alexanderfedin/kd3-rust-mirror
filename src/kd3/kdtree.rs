@@ -471,7 +471,7 @@ extern "C" fn _report_all_leaves(tree: *const Kdtree, node: *const TreeNode,
 #[inline]
 /// convenience function to explore a sub-domain
 extern "C" fn _explore_branch(tree: *mut Kdtree, node: *mut TreeNode,
-    depth: u64, search_space: *const Space, domain: *const Space,
+    depth: u64, search_space: &Space, domain: *const Space,
     iter: *mut KdtreeIterator) -> () {
     if _is_leaf_node(unsafe { &*node }) != 0 {
         if _point_in_search_space(unsafe {
@@ -480,7 +480,7 @@ extern "C" fn _explore_branch(tree: *mut Kdtree, node: *mut TreeNode,
                                         (*tree).points.add(unsafe { (*node).idx } as usize)
                                     }
                                 }
-                    }, unsafe { &*search_space }) != 0 {
+                    }, search_space) != 0 {
             _iterator_push(unsafe { &mut *iter },
                 unsafe {
                     (*unsafe {
@@ -488,10 +488,9 @@ extern "C" fn _explore_branch(tree: *mut Kdtree, node: *mut TreeNode,
                             }).idx
                 });
         }
-    } else if _search_area_intersects(unsafe { &*search_space },
-                unsafe { &*domain }) != 0 {
-        if _completely_enclosed(unsafe { &*search_space },
-                    unsafe { &*domain }) != 0 {
+    } else if _search_area_intersects(search_space, unsafe { &*domain }) != 0
+        {
+        if _completely_enclosed(search_space, unsafe { &*domain }) != 0 {
             _report_all_leaves(tree as *const Kdtree, node as *const TreeNode,
                 iter);
         } else {
@@ -505,8 +504,8 @@ extern "C" fn _explore_branch(tree: *mut Kdtree, node: *mut TreeNode,
 ///Results are appended to the iterator object.
 #[allow(unused_doc_comments)]
 extern "C" fn _search_kdtree(tree: *mut Kdtree, root: &TreeNode, depth: u64,
-    search_space: *const Space, domain: *const Space,
-    iter: *mut KdtreeIterator) -> () {
+    search_space: &Space, domain: *const Space, iter: *mut KdtreeIterator)
+    -> () {
     let axis: u64 = (depth % NDIMS as u64) as u64;
     let mut new_domain: Space = unsafe { core::mem::zeroed() };
 
@@ -592,8 +591,7 @@ pub(crate) extern "C" fn kdtree_search_space(tree: *mut Kdtree,
 
     /// search tree
     _search_kdtree(tree, unsafe { &*unsafe { (*tree).root } }, 0 as u64,
-        &raw mut search_space as *const Space,
-        &raw mut domain as *const Space, iter);
+        &search_space, &raw mut domain as *const Space, iter);
 }
 
 /// search tree for points that fall within the 3d cube defined by
