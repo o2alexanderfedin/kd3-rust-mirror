@@ -1,5 +1,11 @@
 use super::*;
 
+pub const KDTREE_ITERATOR_INITIAL_SIZE: i32 = 50;
+
+pub const KDTREE_ITERATOR_GROWTH_RATIO: i32 = 2;
+
+pub const KDTREE_END: u64 = 18446744073709551615;
+
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub(crate) struct DataPoint {

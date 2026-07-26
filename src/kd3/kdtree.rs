@@ -1,5 +1,8 @@
 use super::*;
-use crate::kd3::kdtree_h::{DataPoint, Kdtree, KdtreeIterator, Space, TreeNode};
+use crate::kd3::kdtree_h::{
+    DataPoint, Kdtree, KdtreeIterator, Space, TreeNode, KDTREE_END, KDTREE_ITERATOR_GROWTH_RATIO,
+    KDTREE_ITERATOR_INITIAL_SIZE,
+};
 use crate::{
     __assert_rtn, __builtin___memcpy_chk, __builtin_object_size, free, malloc, qsort, realloc,
 };
@@ -393,7 +396,7 @@ extern "C" fn _iterator_new() -> *mut KdtreeIterator {
     };
     unsafe { (*iter).current = 0 as u64 };
     unsafe { (*iter).size = 0 as u64 };
-    unsafe { (*iter).capacity = 50 as u64 };
+    unsafe { (*iter).capacity = KDTREE_ITERATOR_INITIAL_SIZE as u64 };
     unsafe {
         (*iter).data = unsafe {
             malloc((core::mem::size_of::<u64>() as u64).wrapping_mul(unsafe { (*iter).capacity }))
@@ -447,7 +450,9 @@ extern "C" fn _iterator_push(iter: &mut KdtreeIterator, value: u64) -> () {
                 let _ = 0;
             }
         };
-        (*iter).capacity = (*iter).capacity.wrapping_mul(2 as u64);
+        (*iter).capacity = (*iter)
+            .capacity
+            .wrapping_mul(KDTREE_ITERATOR_GROWTH_RATIO as u64);
         (*iter).data = unsafe {
             realloc(
                 (*iter).data as *mut (),
@@ -739,7 +744,7 @@ pub(crate) extern "C" fn kdtree_search(
 ///end is reached
 pub(crate) extern "C" fn kdtree_iterator_get_next(iter: &mut KdtreeIterator) -> u64 {
     if (*iter).current == (*iter).size {
-        return 18446744073709551615u64;
+        return KDTREE_END as u64;
     }
     return unsafe {
         *(*iter).data.add({
