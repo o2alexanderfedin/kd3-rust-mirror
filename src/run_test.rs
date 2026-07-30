@@ -104,12 +104,7 @@ extern "C" fn validate(iter: *mut KdtreeIterator, v: &[u64]) -> () {
                 };
                 break '__c1;
             }
-            {
-                let __p = &mut i;
-                let __t = *__p;
-                *__p = (*__p).wrapping_add(1);
-                __t
-            };
+            i = i.wrapping_add(1);
         }
     }
     if !(kdtree_iterator_get_next(unsafe { &mut *iter }) == 18446744073709551615u64) as i32 as i64
@@ -166,12 +161,7 @@ extern "C" fn validate(iter: *mut KdtreeIterator, v: &[u64]) -> () {
                 };
                 break '__c2;
             }
-            {
-                let __p = &mut i;
-                let __t = *__p;
-                *__p = (*__p).wrapping_add(1);
-                __t
-            };
+            i = i.wrapping_add(1);
         }
     }
     unsafe { free(content as *mut ()) };

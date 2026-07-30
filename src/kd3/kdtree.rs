@@ -331,12 +331,7 @@ pub(crate) extern "C" fn kdtree_build(
                     };
                     break '__c0;
                 }
-                {
-                    let __p = &mut i;
-                    let __t = *__p;
-                    *__p = (*__p).wrapping_add(1);
-                    __t
-                };
+                i = i.wrapping_add(1);
             }
         }
 
@@ -567,7 +562,7 @@ extern "C" fn _search_kdtree(
     iter: *mut KdtreeIterator,
 ) -> () {
     let axis: u64 = (depth % NDIMS as u64) as u64;
-    let mut new_domain: Space = unsafe { core::mem::zeroed() };
+    let mut new_domain: Space = Space::default();
 
     /// initialise boundaries for new domain
     unsafe {
@@ -619,8 +614,8 @@ pub(crate) extern "C" fn kdtree_search_space(
     z_max: f64,
 ) -> () {
     let mut iter: *mut KdtreeIterator = *iter_ptr;
-    let mut search_space: Space = unsafe { core::mem::zeroed() };
-    let mut domain: Space = unsafe { core::mem::zeroed() };
+    let mut search_space: Space = Space::default();
+    let mut domain: Space = Space::default();
 
     /// sanity checks
     if !(tree as *mut () != 0 as *mut ()) as i32 as i64 != 0 {

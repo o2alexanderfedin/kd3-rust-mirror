@@ -7,7 +7,7 @@ pub const KDTREE_ITERATOR_GROWTH_RATIO: i32 = 2;
 pub const KDTREE_END: u64 = 18446744073709551615;
 
 #[repr(C)]
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Default)]
 pub(crate) struct DataPoint {
     pub(crate) x: f64,
     pub(crate) y: f64,
@@ -16,7 +16,7 @@ pub(crate) struct DataPoint {
 }
 
 #[repr(C)]
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Default)]
 pub(crate) struct TreeNode {
     pub(crate) left: *mut TreeNode,
     pub(crate) right: *mut TreeNode,
@@ -25,20 +25,20 @@ pub(crate) struct TreeNode {
 }
 
 #[repr(C)]
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Default)]
 pub(crate) struct Boundaries {
     pub(crate) min: f64,
     pub(crate) max: f64,
 }
 
 #[repr(C)]
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Default)]
 pub(crate) struct Space {
     pub(crate) dim: [Boundaries; 3],
 }
 
 #[repr(C)]
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Default)]
 pub(crate) struct Kdtree {
     pub(crate) count: u64,
     pub(crate) max_nodes: u64,
@@ -49,7 +49,7 @@ pub(crate) struct Kdtree {
 }
 
 #[repr(C)]
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Default)]
 pub(crate) struct KdtreeIterator {
     pub(crate) data: *mut u64,
     pub(crate) capacity: u64,
